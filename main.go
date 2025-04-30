@@ -89,15 +89,27 @@ func main() {
 
 	fmt.Println("数据库连接成功！", db)
 	// 定义表结构，将表结构直接生成对应的表 自动建表
-	db.AutoMigrate(&Product{})
+	//db.AutoMigrate(&Product{})
 	// 创建一条记录测试
-	product := Product{Price: 100}
-	result := db.Create(&product)
+	//product := Product{Price: 100}
+	//result := db.Create(&product)
+	//if result.Error != nil {
+	//	panic(result.Error)
+	//}
+	//
+	//fmt.Println("Product Created:", product)
+	//	read
+	var productFind Product
+	result := db.First(&productFind, "code = ?", "1916479347485577216")
 	if result.Error != nil {
 		panic(result.Error)
 	}
-
-	fmt.Println("Product Created:", product)
+	fmt.Println("ProductFind Read:", productFind)
+	// update
+	productFind.Price = 300
+	result = db.Save(&productFind)
+	// delete 逻辑删除
+	db.Delete(&productFind, 1)
 }
 
 func loadConfig(path string) Config {
